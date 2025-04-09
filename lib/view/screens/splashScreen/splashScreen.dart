@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:bind/view/responsive/mobile_scree_layout.dart';
@@ -11,9 +10,11 @@ import 'package:animations/animations.dart';
 
 import '../../responsive/web_screen_layout.dart';
 
-class  SplashScreen extends StatefulWidget {
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  State<StatefulWidget> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
@@ -21,65 +22,63 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Timer(Duration(milliseconds: 400), () {
+    Timer(const Duration(milliseconds: 400), () {
       setState(() {
         _a = true;
       });
     });
-    Timer(Duration(milliseconds: 400), () {
+    Timer(const Duration(milliseconds: 400), () {
       setState(() {
         _b = true;
       });
     });
-    Timer(Duration(milliseconds: 1300), () {
+    Timer(const Duration(milliseconds: 1300), () {
       setState(() {
         _c = true;
       });
     });
-    Timer(Duration(milliseconds: 1700), () {
+    Timer(const Duration(milliseconds: 1700), () {
       setState(() {
         _e = true;
       });
     });
-    Timer(Duration(milliseconds: 3400), () {
+    Timer(const Duration(milliseconds: 3400), () {
       setState(() {
         _d = true;
       });
     });
-    Timer(Duration(milliseconds: 3850), () {
+    Timer(const Duration(milliseconds: 3850), () {
       setState(() {
-
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) =>StreamBuilder(
-            stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (context, snapshot) {  
-              if (snapshot.connectionState == ConnectionState.active) {
-                if (snapshot.hasData) {
-                  return const ResponsiveLayout(
-                    mobileScreenLayout: MobileScreenLayout(),
-                    webScreenLayout: WebScreenLayout(),
+          MaterialPageRoute(
+            builder: (context) => StreamBuilder(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.active) {
+                  if (snapshot.hasData) {
+                    return const ResponsiveLayout(
+                      mobileScreenLayout: MobileScreenLayout(),
+                      webScreenLayout: WebScreenLayout(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text(snapshot.error.toString()));
+                  }
+                } else if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
-                } 
-                else if (snapshot.hasError) {
-                  return Center(child: Text(snapshot.error.toString()));
                 }
-              }
-              else if(snapshot.connectionState==ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),);
-              }
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              return LogInScreen();
-            },
-          ), 
-           
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return LogInScreen();
+              },
+            ),
           ),
         );
-        
       });
     });
   }
@@ -97,8 +96,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double _h = MediaQuery.of(context).size.height;
-    double _w = MediaQuery.of(context).size.width;
+    double h = MediaQuery.of(context).size.height;
+    double w = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
@@ -110,7 +109,7 @@ class _SplashScreenState extends State<SplashScreen> {
               height: _d
                   ? 0
                   : _a
-                      ? _h / 2
+                      ? h / 2
                       : 20,
               width: 20,
               // color: Colors.deepPurpleAccent,
@@ -124,20 +123,21 @@ class _SplashScreenState extends State<SplashScreen> {
                           : 0),
               curve: Curves.fastLinearToSlowEaseIn,
               height: _d
-                  ? _h
+                  ? h
                   : _c
                       ? 80
                       : 20,
               width: _d
-                  ? _w
+                  ? w
                   : _c
                       ? 200
                       : 20,
               decoration: BoxDecoration(
                   color: _b ? Colors.white : Colors.transparent,
                   // shape: _c? BoxShape.rectangle : BoxShape.circle,
-                  borderRadius:
-                      _d ? const BorderRadius.only() : BorderRadius.circular(30)),
+                  borderRadius: _d
+                      ? const BorderRadius.only()
+                      : BorderRadius.circular(30)),
               child: Center(
                 child: _e
                     ? AnimatedTextKit(
@@ -147,10 +147,9 @@ class _SplashScreenState extends State<SplashScreen> {
                             'Bind Messenger',
                             duration: const Duration(milliseconds: 1700),
                             textStyle: const TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'macondo'
-                            ),
+                                fontSize: 25,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'macondo'),
                           ),
                         ],
                       )

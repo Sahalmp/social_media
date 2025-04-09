@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-
 import 'package:bind/controller/google_signIn_Provider.dart';
 import 'package:bind/controller/userSignUp_provider.dart';
 import 'package:bind/model/utils/utils.dart';
@@ -22,11 +21,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-
-
-
 class SignUpScreen extends StatefulWidget {
-  SignUpScreen({Key? key}) : super(key: key);
+  const SignUpScreen({Key? key}) : super(key: key);
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -43,7 +39,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Uint8List? image;
 
-  bool isLoading= false;
+  bool isLoading = false;
   @override
   void dispose() {
     // TODO: implement dispose
@@ -54,7 +50,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _bioController.dispose();
   }
 
-    Future<String> signUpUser({
+  Future<String> signUpUser({
     required TextEditingController email,
     required TextEditingController password,
     required TextEditingController username,
@@ -64,31 +60,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
     // if(email.text.isEmpty||password.text.isEmpty||username.text.isEmpty||bio.text.isEmpty
     // ||imageFile.isEmpty){
     //   showSnackBarr('enter all fields', context);
-      
+
     // }
     setState(() {
-      isLoading=true;
-      
+      isLoading = true;
     });
-    
- 
+
     String res = await AuthMethods().signUpUser(
-       
         email: email.text.trim(),
         password: password.text.trim(),
         username: username.text.trim(),
         bio: bio.text.trim(),
         file: imageFile);
- 
-       setState(() {
-          isLoading=false;
-       });
-    
-        return res;
 
-  
-  
+    setState(() {
+      isLoading = false;
+    });
+
+    return res;
   }
+
   void selectImage() async {
     Uint8List im = await pickImage(ImageSource.gallery);
     setState(() {
@@ -96,12 +87,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final signUpProvider = Provider.of<SignUpProvider>(context, listen: false);
-    final googleUser=Provider.of<GoogleSignInProvider>(context);
+    final googleUser = Provider.of<GoogleSignInProvider>(context);
     return Scaffold(
       body: SafeArea(
           child: ListView(
@@ -129,7 +118,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(
                   height: 25.h,
                 ),
-                
+
                 Stack(
                   children: [
                     image != null
@@ -137,7 +126,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             radius: 50.r,
                             backgroundImage: MemoryImage(image!),
                           )
-                        :  CircleAvatar(
+                        : CircleAvatar(
                             radius: 50.r,
                             backgroundColor: Colors.grey[400],
                             backgroundImage: const NetworkImage(
@@ -148,7 +137,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         left: 55,
                         child: IconButton(
                             onPressed: () async {
-                               selectImage();
+                              selectImage();
                             },
                             icon: const Icon(Icons.add_a_photo)))
                   ],
@@ -208,25 +197,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     borderRadius: BorderRadius.circular(15.r),
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.teal,
+                          backgroundColor: Colors.teal,
                         ),
                         onPressed: () async {
                           // final res = signUpProvider.
-                      if(_emailcontroller.text.isEmpty||
-                      _passwordController.text.isEmpty||
-                      _usernamecontroller.text.isEmpty||
-                      _bioController.text.isEmpty||image==null
-                      ){
-                        showSnackBarr('please enter all fields', context);
-                        return;
-                      }
-                         final res=await signUpUser(
-                            email: _emailcontroller,
-                            password: _passwordController,
-                            username: _usernamecontroller,
-                            bio: _bioController,
-                            imageFile: image!
-                          );
+                          if (_emailcontroller.text.isEmpty ||
+                              _passwordController.text.isEmpty ||
+                              _usernamecontroller.text.isEmpty ||
+                              _bioController.text.isEmpty ||
+                              image == null) {
+                            showSnackBarr('please enter all fields', context);
+                            return;
+                          }
+                          final res = await signUpUser(
+                              email: _emailcontroller,
+                              password: _passwordController,
+                              username: _usernamecontroller,
+                              bio: _bioController,
+                              imageFile: image!);
                           if (res == 'success') {
                             showSnackBarr(res.toString(), context);
                             Navigator.of(context).pushReplacement(
@@ -237,24 +225,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                               MobileScreenLayout(),
                                           webScreenLayout: WebScreenLayout(),
                                         )));
-                          }  
-                           
-                           
+                          }
+
                           showSnackBarr(res.toString(), context);
-                          
-                   
+
                           signUpProvider.clearImageFile();
                         },
-                        child:  isLoading? 
-                        const Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                          ),
-                        ):
-                       const  Text(
-                          'Sign Up',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        )),
+                        child: isLoading
+                            ? const Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Text(
+                                'Sign Up',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              )),
                   ),
                 ),
                 SizedBox(
@@ -264,41 +250,42 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(
                   height: 10.h,
                 ),
-                isLoading?
-                const SizedBox():
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 100.w,
-                      decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(15.r)),
-                      child: IconButton(
-                          onPressed: ()async {
-                          final res=  await googleUser.googleSignUP(context);
-                            if (res == 'success') {
-                            showSnackBarr(res.toString(), context);
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ResponsiveLayout(
-                                          mobileScreenLayout:
-                                              MobileScreenLayout(),
-                                          webScreenLayout: WebScreenLayout(),
-                                        )));
-                          }  
-                           
-                           
-                          showSnackBarr(res.toString(), context);
-                          },
-                          icon: const FaIcon(
-                            FontAwesomeIcons.google,
-                            color: Colors.white,
-                          )),
-                    ),
-                  ],
-                ),
+                isLoading
+                    ? const SizedBox()
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 100.w,
+                            decoration: BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: BorderRadius.circular(15.r)),
+                            child: IconButton(
+                                onPressed: () async {
+                                  final res =
+                                      await googleUser.googleSignUP(context);
+                                  if (res == 'success') {
+                                    showSnackBarr(res.toString(), context);
+                                    Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const ResponsiveLayout(
+                                                  mobileScreenLayout:
+                                                      MobileScreenLayout(),
+                                                  webScreenLayout:
+                                                      WebScreenLayout(),
+                                                )));
+                                  }
+
+                                  showSnackBarr(res.toString(), context);
+                                },
+                                icon: const FaIcon(
+                                  FontAwesomeIcons.google,
+                                  color: Colors.white,
+                                )),
+                          ),
+                        ],
+                      ),
                 SizedBox(
                   height: 30.h,
                 ),
